@@ -145,8 +145,6 @@ func addToCartMenu(){
             }
             
             print("You have added \(quantity) \(item)(s) to your cart \n"
-//            + "Current total is: $ \(quantity * itemPrice[item]!))"
-//        }
 
         
     }
