@@ -247,10 +247,10 @@ func checkItemInStock(){
         appropriateOption = true
         while appropriateOption{
             print("What item would you like to check if it's in stock? \n"
-                    + "Cereal \n"
-                    + "Milk \n"
-                    + "Syrup \n"
-                    + "Cups")
+                    + "1. Cereal \n"
+                    + "2. Milk \n"
+                    + "3. Syrup \n"
+                    + "4. Cups")
         }
         if let userInput = readLine(){
             appropriateOption = false
