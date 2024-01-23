@@ -70,9 +70,11 @@ while mainMenu{
             
         case "3":
             checkItemInStock()
+            mainMenu = false
             
         case "4":
             adminMenu()
+            mainMenu = false
             
         case "5":
             //when the user choose check out option, the main menu will be false to stop showing options in the beginning
@@ -112,24 +114,29 @@ func addToCartMenu(){
                 //grab the quantity input and change it to integer
                 if let quantity = readLine(), let number = Int(quantity){
                     addItem(item: "cereal", quantity: number)
+                    //update the quantity after the user takes a certain amount of the item
+                    itemQuantityInStock["cereal"]! -= userCart["cereal"]!
                 }
             }
             else if userInput == "2"{
                 print("How many milk(s) would you like to add to cart?")
                 if let quantity = readLine(), let number = Int(quantity){
                     addItem(item: "milk", quantity: number)
+                    itemQuantityInStock["milk"]! -= userCart["milk"]!
                 }
             }
             else if userInput == "3"{
                 print("How many syrup(s) would you like to add to cart?")
                 if let quantity = readLine(), let number = Int(quantity){
                     addItem(item: "syrup", quantity: number)
+                    itemQuantityInStock["syrup"]! -= userCart["syrup"]!
                 }
             }
             else if userInput == "4"{
                 print("How many cup(s) would you like to add to cart?")
                 if let quantity = readLine(), let number = Int(quantity){
                     addItem(item: "cups", quantity: number)
+                    itemQuantityInStock["cups"]! -= userCart["cups"]!
                 }
             }
             else{
@@ -153,9 +160,9 @@ func addItem(item: String, quantity: Int) {
                 }
                 
                 //calculate the total price and round it to 2 decimal places
-                total += ((Double(quantity) * itemPrice[item]!) * 100).rounded()/100
-                print("You have added \(quantity) \(item)(s) to your cart \n",
-                      "Current total is: $ \(total)")
+                total += Double(quantity) * itemPrice[item]!
+                print("You have added \(quantity) \(item)(s) to your cart \n"
+                       + "Current total is: $ \(String(format : "%.2f", total))")
 
             }
             
@@ -179,9 +186,18 @@ func removeFromCartMenu(){
                     //grab the quantity input and change it to integer
                     if let quantity = readLine(), let number = Int(quantity), number < userCart["cereal"]!{
                         removeItem(item: "cereal", quantity: number)
+                        
                     }
+                    //when the user don't have any items in their cart then alert them
+                    else if userCart["cereal"]! == 0{
+                        print("You don't have any in your cart")
+                    }
+                    //when the user wants to remove more than what they have, alert this
+                    //then remove all the items in their cart and add them back to the stock
+                    //then reset the user's cart to 0
                     else{
                         print("You don't have enough cereals to remove but I will remove all the cereals you currently have")
+                        itemQuantityInStock["cereal"]! += userCart["cereal"]!
                         userCart["cereal"]! = 0
                     }
                 }
@@ -190,8 +206,13 @@ func removeFromCartMenu(){
                     if let quantity = readLine(), let number = Int(quantity), number < userCart["milk"]!{
                         removeItem(item: "milk", quantity: number)
                     }
+                    else if userCart["milk"]! == 0{
+                        print("You don't have any in your cart")
+                    }
                     else{
                         print("You don't have enough milks to remove but I will remove all the milks you currently have")
+                        itemQuantityInStock["milk"]! += userCart["milk"]!
+                        userCart["milk"]! = 0
                     }
                 }
                 else if userInput == "3"{
@@ -199,8 +220,13 @@ func removeFromCartMenu(){
                     if let quantity = readLine(), let number = Int(quantity), number < userCart["syrup"]!{
                         removeItem(item: "syrup", quantity: number)
                     }
+                    else if userCart["syrup"]! == 0{
+                        print("You don't have any in your cart")
+                    }
                     else{
                         print("You don't have enough syrups to remove but I will remove all the syrups you currently have")
+                        itemQuantityInStock["syrup"]! += userCart["syrup"]!
+                        userCart["syrup"]! = 0
                     }
                 }
                 else if userInput == "4"{
@@ -208,8 +234,13 @@ func removeFromCartMenu(){
                     if let quantity = readLine(), let number = Int(quantity), number < userCart["cups"]!{
                         removeItem(item: "cups", quantity: number)
                     }
+                    else if userCart["cups"]! == 0{
+                        print("You don't have any in your cart")
+                    }
                     else{
                         print("You don't have enough cups to remove but I will remove all the cups you currently have")
+                        itemQuantityInStock["cups"]! += userCart["cups"]!
+                        userCart["cups"]! = 0
                     }
                 }
                 else{
@@ -234,37 +265,113 @@ func removeFromCartMenu(){
             }
             
             //calculate the total after removing certain amount of item and rounded it to 2 decimal
-            total -= ((Double(quantity) * itemPrice[item]!)*100)/100
-            print("You have removed \(quantity) \(item)(s) from your cart \n",
-                    "Current total is: $ \(total)")
+            total -= Double(quantity) * itemPrice[item]!
+            print("You have removed \(quantity) \(item)(s) from your cart \n"
+                  + "Current total is: $ \(String(format : "%.2f", total))")
                 
             }
             
         }
     }
-    
+
 func checkItemInStock(){
-        appropriateOption = true
-        while appropriateOption{
-            print("What item would you like to check if it's in stock? \n"
-                    + "1. Cereal \n"
-                    + "2. Milk \n"
-                    + "3. Syrup \n"
-                    + "4. Cups")
+    print("What item would you like to check if it's in stock? \n"
+          + "1. Cereal \n"
+          + "2. Milk \n"
+          + "3. Syrup \n"
+          + "4. Cups")
+    
+    if let userInput = readLine(){
+        //grab the quantity of the item that the user chose
+        if userInput == "1"{
+            print("There are currently \(itemQuantityInStock["cereal"]!) cereals in stock")
+        }
+        else if userInput == "2"{
+            print("There are currently \(itemQuantityInStock["milk"]!) milks in stock")
+        }
+        else if userInput == "3"{
+            print("There are currently \(itemQuantityInStock["syrup"]!) syrups in stock")
+        }
+        else if userInput == "4"{
+            print("There are currently \(itemQuantityInStock["cups"]!) cups in stock")
+        }
+    }
+}
+    
+func adminMenu(){
+        print("Enter Admin ID:")
+    if let userInput = readLine(){
+        if userInput == adminID{
+            print("Welcome to the Admin menu! Let's us know how we can help you (Enter number of selection) \n"
+                  + "1. Restock inventory \n"
+                  + "2. Generate report \n"
+                  + "3. Check number of items \n"
+                  + "4. Quit admin menu")
+        }
+        else{
+            print("You have entered the incorrect ID")
         }
         if let userInput = readLine(){
-            appropriateOption = false
             if userInput == "1"{
-                print("There are currently \(userCart["cereal"]!) cereals in stock")
+                print("What would you like to restock? (Enter number of selection) \n"
+                      + "1. Cereal \n"
+                      + "2. Milk \n"
+                      + "3. Syrup \n"
+                      + "4. Cups")
+            }
+            if let userInput = readLine(){
+                if userInput == "1"{
+                    print("How many units of cereal would you like to restock?")
+                    
+                    //grab the quantity input and change it to integer
+                    if let quantity = readLine(), let number = Int(quantity){
+                        restockItem(item: "cereal", quantity: number)
+                    }
+                }
+                else if userInput == "2"{
+                    print("How many units of milk would you like to restock?")
+                    
+                    //grab the quantity input and change it to integer
+                    if let quantity = readLine(), let number = Int(quantity){
+                        restockItem(item: "milk", quantity: number)
+                    }
+                }
+                else if userInput == "3"{
+                    print("How many units of syrup would you like to restock?")
+                    
+                    //grab the quantity input and change it to integer
+                    if let quantity = readLine(), let number = Int(quantity){
+                        restockItem(item: "syrup", quantity: number)
+                    }
+                }
+                else if userInput == "4"{
+                    print("How many units of cup would you like to restock?")
+                    
+                    //grab the quantity input and change it to integer
+                    if let quantity = readLine(), let number = Int(quantity){
+                        restockItem(item: "cups", quantity: number)
+                    }
+                }
+            }
+            
+            //case 2
+            func restockItem(item: String, quantity: Int){
+                
+                //variable that keeps track of the total quantity in stock by adding all the item's quantity together
+                var totalQuantityInStock = itemQuantityInStock["cereal"]! + itemQuantityInStock["milk"]! + itemQuantityInStock["syrup"]! + itemQuantityInStock["cups"]!
+                
+                if item == "cereal"{
+                    itemQuantityInStock["cereal"]! += quantity
+
+                }
             }
         }
     }
-    
-    func adminMenu(){
-        
-    }
+}
+
     
     func checkOut(){
         
     }
+    
 
