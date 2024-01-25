@@ -308,6 +308,7 @@ func checkItemInStock(){
     }
 }
 
+//function that displays admin menu options
 func adminMenu(){
     print("Enter Admin ID:")
     if let userInput = readLine(){
@@ -316,7 +317,7 @@ func adminMenu(){
         }
         else{
             print("You have entered incorrect ID number")
-            return
+            return //return to the normal menu if the user enter incorrect ID number
         }
         while adminMenuIsTrue{
             print("Welcome to the Admin menu! Let's us know how we can help you (Enter number of selection) \n"
@@ -352,7 +353,7 @@ func adminMenu(){
                 }
                 else if adminInput == "4"{
                     print("Returning to normal menu")
-                    adminMenuIsTrue = false
+                    adminMenuIsTrue = false //make adminMenuIsTrue to false to stop displaying admin menu and return to normal menu
                 }
             }
         }
@@ -419,7 +420,7 @@ func restockItem(item: String, quantity: Int){
         }
     
 }
-    
+
 func checkOut(){
         print("Thanks for shopping with us! \n"
               + "You purchases the following: \n"
