@@ -430,5 +430,3 @@ func checkOut(){
               + "Cups: \(userCart["cups"]!) \n"
               + "Your grand total including tax (9.25%) is: $ \(String(format: "%.2f", ((total * 0.0925) + total)))")
     }
-    
-
