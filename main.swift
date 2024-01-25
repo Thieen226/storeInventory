@@ -7,15 +7,6 @@
 
 import Foundation
 
-//var name: String?
-
-//if let name = readLine(){
-//    //Use the name variable
-//}
-//else{
-//    print("No name was entered")
-//}
-
 var itemPrice : [String: Double] = [
     "cereal": 4.99,
     "milk" : 4.99,
